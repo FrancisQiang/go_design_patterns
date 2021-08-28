@@ -22,32 +22,32 @@ type Body struct {
 }
 
 type MessageBuilder struct {
-	message         Message
-	headerItemsOnce sync.Once
-	bodyItemsOnce   sync.Once
+	message         *Message
+	headerItemsOnce *sync.Once
+	bodyItemsOnce   *sync.Once
 }
 
-func (builder *MessageBuilder) WithSrcAddr(srcAddr string) Message {
+func (builder *MessageBuilder) WithSrcAddr(srcAddr string) *Message {
 	builder.message.header.SrcAddr = srcAddr
 	return builder.message
 }
 
-func (builder *MessageBuilder) WithSrcPort(srcPort int64) Message {
+func (builder *MessageBuilder) WithSrcPort(srcPort int64) *Message {
 	builder.message.header.SrcPort = srcPort
 	return builder.message
 }
 
-func (builder *MessageBuilder) WithDestAddr(destAddr string) Message {
+func (builder *MessageBuilder) WithDestAddr(destAddr string) *Message {
 	builder.message.header.DestAddr = destAddr
 	return builder.message
 }
 
-func (builder *MessageBuilder) WithDestPort(destPort int64) Message {
+func (builder *MessageBuilder) WithDestPort(destPort int64) *Message {
 	builder.message.header.DestPort = destPort
 	return builder.message
 }
 
-func (builder *MessageBuilder) WithHeaderItems(key, value string) Message {
+func (builder *MessageBuilder) WithHeaderItems(key, value string) *Message {
 	builder.headerItemsOnce.Do(func() {
 		builder.message.header.Items = make(map[string]string)
 	})
@@ -55,7 +55,7 @@ func (builder *MessageBuilder) WithHeaderItems(key, value string) Message {
 	return builder.message
 }
 
-func (builder *MessageBuilder) WithBodyItems(key, value string) Message {
+func (builder *MessageBuilder) WithBodyItems(key, value string) *Message {
 	builder.bodyItemsOnce.Do(func() {
 		builder.message.body.Items = make(map[string]string)
 	})
@@ -63,7 +63,15 @@ func (builder *MessageBuilder) WithBodyItems(key, value string) Message {
 	return builder.message
 }
 
-func (builder *MessageBuilder) Build() Message {
+func Builder() *MessageBuilder  {
+	return &MessageBuilder{
+		headerItemsOnce: &sync.Once{},
+		bodyItemsOnce: &sync.Once{},
+		message: &Message{},
+	}
+}
+
+func (builder *MessageBuilder) Build() *Message {
 	return builder.message
 }
 
