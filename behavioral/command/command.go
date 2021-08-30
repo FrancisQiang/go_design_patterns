@@ -3,7 +3,9 @@ package command
 import (
 	"fmt"
 )
-
+// 使命令和调用者解耦
+// 抽象一个命令类，有很多子类去实现
+// 调用者类持有命令类基类
 type Command interface {
 	Execute()
 }
